@@ -1,0 +1,6 @@
+.DS_Store
+hosts
+/host_vars/*
+!/host_vars/example
+/*.yml
+!/example.yml

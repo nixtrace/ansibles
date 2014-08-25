@@ -1,0 +1,9 @@
+---
+
+- name: update exim config
+  sudo: yes
+  shell: update-exim4.conf
+
+- name: restart exim
+  sudo: yes
+  service: name=exim4 state=restarted

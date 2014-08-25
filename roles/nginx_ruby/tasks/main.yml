@@ -1,0 +1,15 @@
+---
+- name: ruby app | create nginx host
+  sudo: yes
+  template:
+    src=nginx.j2
+    dest=/etc/nginx/sites-available/{{ app }}
+  notify: restart nginx
+
+- name: link nginx host
+  sudo: yes
+  file:
+    src=/etc/nginx/sites-available/{{ app }}
+    dest=/etc/nginx/sites-enabled/{{ app }}
+    state=link
+  notify: restart nginx

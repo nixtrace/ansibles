@@ -1,0 +1,10 @@
+---
+ansible_ssh_host: 127.0.0.1 
+ansible_ssh_user: admin
+ansible_sudo_pass: password
+hostname: test
+domain: test.domain.com
+timezone: 'America/New_York'
+newrelic_key: xxxxxx
+db_password: xxxxxx
+app1_db_password: xxxxxx

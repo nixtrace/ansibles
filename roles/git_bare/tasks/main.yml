@@ -1,0 +1,21 @@
+---
+- name: create app folder
+  file: path=/home/{{ ansible_ssh_user }}/www/{{ app }}/public state=directory
+
+- name: create app logs folder
+  file: path=/home/{{ ansible_ssh_user }}/www/{{ app }}/logs state=directory
+
+- name: create bare repo
+  file: path=/home/{{ ansible_ssh_user }}/repos/{{ app }}.git state=directory
+
+- name: initialize bare repo
+  command:
+    git init --bare
+    chdir=/home/{{ ansible_ssh_user }}/repos/{{ app }}.git
+    creates=/home/{{ ansible_ssh_user }}/repos/{{ app }}.git/HEAD
+
+- name: add post receive deploy hook
+  template:
+    src=post_receive.j2
+    dest=/home/{{ ansible_ssh_user }}/repos/{{ app }}.git/hooks/post-receive
+    mode=0755

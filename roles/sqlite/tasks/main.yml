@@ -1,0 +1,8 @@
+---
+
+- name: install sqlite
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - sqlite3
+    - libsqlite3-dev

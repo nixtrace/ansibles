@@ -1,0 +1,9 @@
+---
+
+- name: install memcached
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - memcached
+  notify:
+    - start memcached

@@ -1,0 +1,17 @@
+---
+- name: create db
+  mysql_db:
+    login_user=root
+    login_password={{ db_password }}
+    name={{ app }}
+    state=present
+
+- name: create db user
+  mysql_user:
+    login_user=root
+    login_password={{ db_password }}
+    name={{ app }}
+    password={{ password }}
+    priv={{ app }}.*:ALL
+    login_unix_socket=/var/run/mysqld/mysqld.sock
+    state=present

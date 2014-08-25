@@ -1,0 +1,18 @@
+server {
+
+  listen 80;
+
+  server_name {{ app_domain }};
+  root /home/{{ ansible_ssh_user }}/www/{{ app }}/public;
+
+  access_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/access.log;
+  error_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/error.log;
+
+  # Protect dot files and folders.
+  location ~ /\. {
+    access_log off;
+    log_not_found off;
+    deny all;
+  }
+
+}

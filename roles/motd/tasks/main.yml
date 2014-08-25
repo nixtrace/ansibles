@@ -1,0 +1,15 @@
+---
+
+- name: install figlet
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - figlet
+
+- name: render figlet name
+  command: figlet {{ hostname }}
+  register: figlet
+
+- name: create motd message
+  sudo: yes
+  template: src=motd.j2 dest=/etc/motd

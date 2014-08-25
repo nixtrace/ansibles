@@ -1,0 +1,68 @@
+---
+- hosts:
+  gather_facts: no
+  roles:
+    - ssh
+    - update
+    - host
+    - timezone
+    - firewall
+    - motd
+    - fail2ban
+    - exim
+    - newrelic
+    - git
+    - zip
+    - gettext
+    - transifex
+    - swaks
+    - python
+    - ruby
+    - phpfpm
+    - nginx
+    - postgresql
+    - sqlite
+    - mysql
+    - memcached
+    - {
+    role: git_bare,
+    app: appname
+    }
+    - {
+    role: nginx_static,
+    app: appname,
+    app_domain: appname.domain.com
+    }
+    - {
+    role: nginx_ruby,
+    app: appname,
+    app_domain: appname.domain.com
+    }
+    - {
+    role: nginx_wordpress,
+    app: appname,
+    app_domain: appname.domain.com
+    }
+    - {
+    role: psql_db,
+    app: appname
+    }
+    - {
+    role: mysql_db,
+    app: appname,
+    password: "{{ app1_db_password }}"
+    }
+    - {
+    role: deploy,
+    app: appname,
+    local: '/httpdocs/appname'
+    }
+    - {
+    role: wordpress,
+    app: appname,
+    password: "{{ app1_db_password }}"
+    }
+    - {
+    role: transifex_client,
+    app: appname
+    }

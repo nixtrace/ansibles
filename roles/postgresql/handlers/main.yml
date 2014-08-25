@@ -1,0 +1,9 @@
+---
+
+- name: start postgresql
+  sudo: yes
+  service: name=postgresql state=started
+
+- name: restart postgresql
+  sudo: yes
+  service: name=postgresql state=restarted

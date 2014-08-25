@@ -1,0 +1,45 @@
+upstream {{ app }} {
+  server unix:///tmp/{{ app }}.sock;
+}
+
+server {
+
+  listen 80;
+
+  server_name {{ app_domain }};
+  root /home/{{ ansible_ssh_user }}/www/{{ app }}/public/public;
+
+  access_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/access.log;
+  error_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/error.log;
+
+  location / {
+    try_files $uri @app;
+  }
+
+  # Pass ruby to upstream.
+  location @app {
+    proxy_pass http://{{ app }};
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+  location = /favicon.ico {
+    log_not_found off;
+    access_log off;
+  }
+
+  location = /robots.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+  }
+
+  # Protect dot files and folders.
+  location ~ /\. {
+    access_log off;
+    log_not_found off;
+    deny all;
+  }
+
+}

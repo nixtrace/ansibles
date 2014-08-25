@@ -1,0 +1,41 @@
+---
+
+- name: install mysql
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - mysql-server
+    - python-mysqldb
+  notify:
+    - start mysql
+
+- name: set root password
+  sudo: yes
+  mysql_user:
+    name=root
+    host={{ item }}
+    password={{ db_password }}
+  with_items:
+    - "{{ hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+  ignore_errors: yes
+  notify:
+    - restart mysql
+
+- name: delete anonymous users
+  sudo: yes
+  mysql_user:
+    login_user=root
+    login_password={{ db_password }}
+    name=""
+    state=absent
+
+- name: remove test db
+  sudo: yes
+  mysql_db:
+    login_user=root
+    login_password={{ db_password }}
+    name=test
+    state=absent

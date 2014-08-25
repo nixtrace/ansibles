@@ -1,0 +1,22 @@
+---
+- name: Disable root access
+  sudo: yes
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    regexp="^#?PermitRootLogin"
+    line="PermitRootLogin no"
+    backrefs=yes
+    state=present
+  notify:
+    - restart ssh
+
+- name: Disable password auth
+  sudo: yes
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    regexp="^#?PasswordAuthentication"
+    line="PasswordAuthentication no"
+    backrefs=yes
+    state=present
+  notify:
+    - restart ssh

@@ -1,0 +1,56 @@
+---
+- name: get ruby-install
+  get_url:
+    url="https://github.com/postmodern/ruby-install/archive/v0.4.3.tar.gz"
+    dest=/home/{{ ansible_ssh_user }}/ruby-install.tar.gz
+
+- name: unpack ruby-install
+  unarchive:
+    src=/home/{{ ansible_ssh_user }}/ruby-install.tar.gz
+    dest=/home/{{ ansible_ssh_user }}/
+    copy=no
+    creates=/home/{{ ansible_ssh_user }}/ruby-install-0.4.3
+
+- name: install ruby-install
+  sudo: yes
+  command:
+    make install
+    chdir=/home/{{ ansible_ssh_user }}/ruby-install-0.4.3
+    creates=/usr/local/bin/ruby-install
+
+- name: install ruby {{ ruby_version }}
+  sudo: yes
+  shell:
+    ruby-install ruby {{ ruby_version }}
+    creates=/opt/rubies/ruby-{{ ruby_version }}/bin/ruby
+
+- name: get chruby
+  get_url:
+    url="https://github.com/postmodern/chruby/archive/v0.3.8.tar.gz"
+    dest=/home/{{ ansible_ssh_user }}/chruby.tar.gz
+
+- name: unpack chruby
+  unarchive:
+    src=/home/{{ ansible_ssh_user }}/chruby.tar.gz
+    dest=/home/{{ ansible_ssh_user }}/
+    copy=no
+    creates=/home/{{ ansible_ssh_user }}/chruby-0.3.8
+
+- name: install chruby
+  sudo: yes
+  command:
+    make install
+    chdir=/home/{{ ansible_ssh_user }}/chruby-0.3.8
+    creates=/usr/local/share/chruby/chruby.sh
+
+- name: autoload ruby {{ ruby_version }}
+  sudo: yes
+  template: src=chruby.j2 dest=/etc/profile.d/chruby.sh
+
+- name: upload .gemrc
+  template: src=gemrc.j2 dest=/home/{{ ansible_ssh_user }}/.gemrc
+
+- name: Install bundler
+  shell:
+    chruby-exec ruby-{{ ruby_version }} -- gem install bundler
+    creates=/home/{{ ansible_ssh_user }}/.gem/ruby/{{ ruby_version }}/bin/bundle

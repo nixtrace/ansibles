@@ -1,0 +1,35 @@
+---
+- name: download
+  get_url:
+    url=http://wordpress.org/latest.tar.gz
+    dest=/home/{{ ansible_ssh_user }}/wordpress.tar.gz
+
+- name: unpack
+  unarchive:
+    src=/home/{{ ansible_ssh_user }}/wordpress.tar.gz
+    dest=/home/{{ ansible_ssh_user }}/
+    copy=no
+    creates=/home/{{ ansible_ssh_user }}/wordpress/index.php
+
+- name: move dir to vhost
+  command:
+    rsync -av wordpress/ /home/{{ ansible_ssh_user }}/www/{{ app }}/public/
+    chdir=/home/{{ ansible_ssh_user }}/
+    creates=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/index.php
+
+- name: get random salt
+  shell:
+    curl "https://api.wordpress.org/secret-key/1.1/salt/" > salt
+    chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/
+    creates=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/salt
+
+- name: read salt
+  command:
+    cat salt
+    chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/
+  register: salt
+
+- name: copy config file
+  template:
+    src=wpconfig.j2
+    dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/wp-config.php

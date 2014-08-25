@@ -1,0 +1,9 @@
+---
+
+- name: start newrelic
+  sudo: yes
+  service: name=newrelic-sysmond state=started
+
+- name: restart newrelic
+  sudo: yes
+  service: name=newrelic-sysmond state=restarted

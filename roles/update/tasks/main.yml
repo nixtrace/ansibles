@@ -1,0 +1,8 @@
+---
+- name: update packages
+  sudo: yes
+  apt: update_cache=yes
+
+- name: upgrade packages
+  sudo: yes
+  apt: upgrade=safe

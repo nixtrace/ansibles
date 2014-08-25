@@ -1,0 +1,9 @@
+---
+
+- name: install fail2ban
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - fail2ban
+  notify:
+    - start fail2ban

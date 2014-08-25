@@ -1,0 +1,6 @@
+---
+- name: install gettext
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - gettext

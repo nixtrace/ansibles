@@ -1,0 +1,13 @@
+---
+- name: Set hostname
+  sudo: yes
+  hostname: name={{ hostname }}
+
+- name: Configure hosts
+  sudo: yes
+  lineinfile:
+    dest=/etc/hosts
+    regexp="^127\.0\.1\.1"
+    line="{{ ansible_ssh_host }}{{'\t'}}{{ domain }}{{'\t'}}{{ hostname }}"
+    backrefs=yes
+    state=present

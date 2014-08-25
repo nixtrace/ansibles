@@ -1,0 +1,50 @@
+---
+
+- name: install php-fpm
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - php5-fpm
+    - php5-mysql
+    - php5-xmlrpc
+    - php5-cgi
+    - php5-curl
+    - php5-gd
+    - php5-cli
+    - php-apc
+    - php5-dev
+    - php5-mcrypt
+  notify: restart php-fpm
+
+- name: disable nearest path
+  sudo: yes
+  lineinfile:
+    dest=/etc/php5/fpm/php.ini
+    regexp="^;?cgi.fix_pathinfo"
+    line="cgi.fix_pathinfo=0"
+    backrefs=yes
+    state=present
+  notify:
+    - restart php-fpm
+
+- name: set process user
+  sudo: yes
+  lineinfile:
+    dest=/etc/php5/fpm/pool.d/www.conf
+    regexp="^user"
+    line="user = {{ ansible_ssh_user }}"
+    backrefs=yes
+    state=present
+  notify:
+    - restart php-fpm
+
+- name: set process group
+  sudo: yes
+  lineinfile:
+    dest=/etc/php5/fpm/pool.d/www.conf
+    regexp="^group"
+    line="group = {{ ansible_ssh_user }}"
+    backrefs=yes
+    state=present
+  notify:
+    - restart php-fpm

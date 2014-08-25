@@ -1,0 +1,24 @@
+---
+- name: initialize client
+  shell:
+    tx init --host={{ tx_host }} --user={{ tx_user }} --pass={{ tx_password }}
+    chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/tmp/transifex
+    creates=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/tmp/transifex/.tx/config
+
+- name: set auto remote
+  shell:
+    tx set --auto-remote {{ tx_remote }}
+    chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/tmp/transifex
+
+- name: first pull
+  shell:
+    tx pull -a
+    chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/tmp/transifex
+
+- name: set default filters
+  lineinfile:
+    dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/tmp/transifex/.tx/config
+    regexp="^file_filter"
+    line="file_filter = {{ tx_filter }}"
+    state=present
+    insertbefore=BOF

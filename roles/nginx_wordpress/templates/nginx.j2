@@ -1,0 +1,50 @@
+server {
+
+  listen 80;
+
+  server_name {{ app_domain }};
+  root /home/{{ ansible_ssh_user }}/www/{{ app }}/public;
+
+  access_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/access.log;
+  error_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/error.log;
+
+  client_max_body_size 10M;
+
+  location ~* /(?:uploads|files)/.*\.php$ {
+    deny all;
+  }
+
+  location / {
+    index index.php index.html index.htm;
+    try_files $uri $uri/ /index.php?$args;
+  }
+
+  location ~ \.php$ {
+    try_files $uri =404;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_index index.php;
+    fastcgi_intercept_errors on;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+  }
+
+  location = /favicon.ico {
+    log_not_found off;
+    access_log off;
+  }
+
+  location = /robots.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+  }
+
+  # Protect dot files and folders.
+  location ~ /\. {
+    access_log off;
+    log_not_found off;
+    deny all;
+  }
+
+}

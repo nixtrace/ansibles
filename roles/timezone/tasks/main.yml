@@ -1,0 +1,5 @@
+---
+- name: set timezone
+  sudo: yes
+  template: src=timezone.j2 dest=/etc/timezone
+  notify: reconfigure tzdata

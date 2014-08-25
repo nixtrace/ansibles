@@ -1,0 +1,5 @@
+---
+- name: create psql db
+  sudo: yes
+  sudo_user: postgres
+  postgresql_db: name={{ app }} owner={{ ansible_ssh_user }} state=present

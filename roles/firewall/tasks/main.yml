@@ -1,0 +1,31 @@
+---
+
+- name: update packages
+  sudo: yes
+  apt: update_cache=yes
+
+- name: install packages
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - ufw
+
+- name: disable all incoming traffic
+  sudo: yes
+  ufw: direction=incoming policy=deny
+
+- name: enable all outgoing traffic
+  sudo: yes
+  ufw: direction=outgoing policy=allow
+
+- name: open ssh
+  sudo: yes
+  ufw: rule=allow port=22 proto=tcp
+
+- name: open http
+  sudo: yes
+  ufw: rule=allow port=80 proto=tcp
+
+- name: enable firewall
+  sudo: yes
+  ufw: state=enabled

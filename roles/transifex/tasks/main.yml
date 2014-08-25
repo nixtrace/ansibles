@@ -1,0 +1,6 @@
+---
+- name: install client
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - transifex-client

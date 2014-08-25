@@ -1,0 +1,43 @@
+---
+
+- name: install nginx
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - nginx
+  notify:
+    - start nginx
+
+- name: get number of processors
+  shell: grep processor /proc/cpuinfo | wc -l
+  register: processors
+
+- name: get ulimit number
+  shell: ulimit -n
+  register: ulimit
+
+- name: set workers number
+  sudo: yes
+  lineinfile:
+    dest=/etc/nginx/nginx.conf
+    regexp="worker_processes"
+    line="worker_processes {{ processors.stdout }};"
+    backrefs=yes
+    state=present
+  notify:
+    - restart nginx
+
+- name: set connections number
+  sudo: yes
+  lineinfile:
+    dest=/etc/nginx/nginx.conf
+    regexp="worker_connections"
+    line="worker_connections {{ ulimit.stdout }};"
+    backrefs=yes
+    state=present
+  notify:
+    - restart nginx
+
+- name: remove default host
+  sudo: yes
+  file: path=/etc/nginx/sites-enabled/default state=absent

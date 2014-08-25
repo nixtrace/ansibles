@@ -1,0 +1,19 @@
+---
+
+- name: install postgresql
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - postgresql
+    - postgresql-client
+    - libpq-dev
+    - python-psycopg2
+  notify:
+    - start postgresql
+
+- name: create the default postgres user
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user:
+    name={{ ansible_ssh_user }}
+    password={{ db_password }}

@@ -1,0 +1,25 @@
+---
+
+- name: install exim4
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - exim4
+
+- name: upload config file
+  sudo: yes
+  template: src=update-exim4.j2 dest=/etc/exim4/update-exim4.conf.conf
+  notify:
+    - update exim config
+    - restart exim
+
+- name: set mailname
+  sudo: yes
+  lineinfile:
+    dest=/etc/mailname
+    regexp="^debian"
+    line="{{ domain }}"
+    backrefs=yes
+    state=present
+  notify:
+    - restart exim

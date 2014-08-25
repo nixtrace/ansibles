@@ -1,0 +1,5 @@
+---
+
+- name: start fail2ban
+  sudo: yes
+  service: name=fail2ban state=started

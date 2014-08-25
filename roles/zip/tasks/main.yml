@@ -1,0 +1,6 @@
+---
+- name: install zip
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - zip
