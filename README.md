@@ -1,6 +1,6 @@
 # Ansibles.
 
-A collection of [Ansible](http://ansible.com) roles, targeting Debian.
+A collection of [Ansible](http://ansible.com) roles, targeting Debian. All roles try to satisfy the single-resonsibility principle, promoting composable playbooks.
 
 ## Setup.
 
