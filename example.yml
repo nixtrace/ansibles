@@ -2,66 +2,97 @@
 - hosts:
   gather_facts: no
   roles:
+    # SSH security.
     - ssh
+    # Update and upgrade system packages.
     - update
+    # Set hostname.
     - host
+    # Set timezone.
     - timezone
+    # Block all in except SSH.
     - firewall
+    # Set figlet welcome message.
     - motd
+    # Enable fail2ban.
     - fail2ban
+    # Setup exim to send emails.
     - exim
+    # Setup newrelic monitoring.
     - newrelic
+    # Install git.
     - git
+    # Install zip.
     - zip
+    # Install gettext.
     - gettext
+    # Install the transifex client.
     - transifex
+    # Install the SMTP test tool.
     - swaks
+    # Install python.
     - python
+    # Install Ruby using ruby-install and chruby.
     - ruby
+    # Install and setup php-fpm.
     - phpfpm
+    # Install and setup nginx.
     - nginx
+    # Install postgresql.
     - postgresql
+    # Install sqlite.
     - sqlite
+    # Install and secure mysql.
     - mysql
+    # Install memcached.
     - memcached
+    # Create app necessary folders and a bare repo.
     - {
     role: git_bare,
     app: appname
     }
+    # Set a static nginx vhost for the app.
     - {
     role: nginx_static,
     app: appname,
     app_domain: appname.domain.com
     }
+    # Set a ruby vhost for the app.
     - {
     role: nginx_ruby,
     app: appname,
     app_domain: appname.domain.com
     }
+    # Set a WordPress vhost for the app.
     - {
     role: nginx_wordpress,
     app: appname,
     app_domain: appname.domain.com
     }
+    # Create a postgresql DB for the app.
     - {
     role: psql_db,
     app: appname
     }
+    # Create a MySQL DB for the app.
     - {
     role: mysql_db,
     app: appname,
     password: "{{ app1_db_password }}"
     }
+    # Deploy a Ruby app on Puma and upload .env
     - {
     role: deploy,
     app: appname,
     local: '/httpdocs/appname'
     }
+    # Deploy a blank WordPress install.
     - {
     role: wordpress,
     app: appname,
     password: "{{ app1_db_password }}"
     }
+    # Setup the Transifex client for the app.
     - {
     role: transifex_client,
     app: appname
