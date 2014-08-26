@@ -1,0 +1,53 @@
+---
+
+- name: install dependencies
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - gcc
+    - make
+    - libssl-dev
+    - zlib1g-dev
+    - e2fslibs-dev
+    
+- name: download
+  get_url:
+    url="https://www.tarsnap.com/download/tarsnap-autoconf-1.0.35.tgz"
+    dest=/home/{{ ansible_ssh_user }}/tarsnap.tgz
+
+- name: unpack
+  unarchive:
+    src=/home/{{ ansible_ssh_user }}/tarsnap.tgz
+    dest=/home/{{ ansible_ssh_user }}/
+    copy=no
+    creates=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/configure
+
+- name: configure
+  sudo: yes
+  command:
+    ./configure
+    chdir=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/
+    creates=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/config.h
+
+- name: make
+  sudo: yes
+  command:
+    make all install clean
+    chdir=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/
+    creates=/usr/local/bin/tarsnap
+
+# - name: copy key
+#   sudo: yes
+#   command:
+#     src={{ playbook_dir }}/tarsnap_keys/{{ hostname }}.key
+#     dest=/home/{{ ansible_ssh_user }}/tarsnap.key
+
+- name: copy config file
+  template:
+    src=tarsnaprc.j2
+    dest=/home/{{ ansible_ssh_user }}/.tarsnaprc
+
+- name: copy folders file
+  template:
+    src=tarsnap_folders.j2
+    dest=/home/{{ ansible_ssh_user }}/.tarsnap_folders

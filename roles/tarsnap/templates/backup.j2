@@ -1,0 +1,16 @@
+#! /bin/bash
+
+dir="$HOME/dbs"
+mkdir -p $dir;
+
+if hash pg_dump 2>/dev/null; then
+  databases=$(psql -l | grep {{ ansible_ssh_user }} | awk {'print $1'})
+
+  for database in $databases; do
+    pg_dump $database -Fc > $dir/$database.sql
+  done
+fi
+
+if hash mysqldump 2>/dev/null; then
+  mysqldump -u root --all-databases > $dir/mysql.sql;
+fi

@@ -4,3 +4,4 @@ hosts
 !/host_vars/example
 /*.yml
 !/example.yml
+tarsnap_keys
