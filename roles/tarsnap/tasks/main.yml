@@ -9,7 +9,7 @@
     - libssl-dev
     - zlib1g-dev
     - e2fslibs-dev
-    
+
 - name: download
   get_url:
     url="https://www.tarsnap.com/download/tarsnap-autoconf-1.0.35.tgz"
@@ -36,11 +36,11 @@
     chdir=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/
     creates=/usr/local/bin/tarsnap
 
-# - name: copy key
-#   sudo: yes
-#   command:
-#     src={{ playbook_dir }}/tarsnap_keys/{{ hostname }}.key
-#     dest=/home/{{ ansible_ssh_user }}/tarsnap.key
+- name: copy key
+  copy:
+    src=tarsnap_keys/{{ hostname }}.key
+    dest=/home/{{ ansible_ssh_user }}/.tarsnap.key
+    mode=0600
 
 - name: copy config file
   template:
