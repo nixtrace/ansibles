@@ -10,6 +10,10 @@ Create an hosts file and list all your hostnames there. Then inside host_vars cr
 
 All available roles are documented in the [example](example.yml) playbook.
 
+## Credits.
+- [Ansible](http://ansible.com)
+- [Tarsnap Generations](https://github.com/Gestas/Tarsnap-generations)
+
 ## License.
 
 Playbooks licensed under the [MIT License](http://opensource.org/licenses/mit-license.php).
