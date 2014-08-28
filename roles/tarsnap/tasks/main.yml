@@ -57,3 +57,9 @@
     src=tarsnap-generations.j2
     dest=/home/{{ ansible_ssh_user }}/bin/tarsnap-generations.sh
     mode=0700
+
+- name: copy backup
+  template:
+    src=backup.j2
+    dest=/home/{{ ansible_ssh_user }}/bin/backup.sh
+    mode=0700

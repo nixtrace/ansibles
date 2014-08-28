@@ -14,3 +14,5 @@ fi
 if hash mysqldump 2>/dev/null; then
   mysqldump -u root --all-databases > $dir/mysql.sql;
 fi
+
+$HOME/bin/tarsnap-generations.sh -fq $HOME/.tarsnap_folders -h 6 -d 6 -w 6 -m 6
