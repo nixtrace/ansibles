@@ -1,13 +1,13 @@
 #! /bin/bash
 
-dir="$HOME/dbs"
+dir="/root/dbs"
 mkdir -p $dir;
 
 if hash pg_dump 2>/dev/null; then
-  databases=$(psql -l | grep {{ ansible_ssh_user }} | awk {'print $1'})
+  databases=$(sudo -u {{ ansible_ssh_user }} psql -l | grep {{ ansible_ssh_user }} | awk {'print $1'})
 
   for database in $databases; do
-    pg_dump $database -Fc > $dir/$database.sql
+    sudo -u {{ ansible_ssh_user }} pg_dump  $database -Fc > $dir/$database.sql
   done
 fi
 

@@ -41,7 +41,8 @@
     state=absent
 
 - name: set mysqldump default
+  sudo: yes
   template:
     src=mycnf.j2
-    dest=/home/{{ ansible_ssh_user }}/.my.cnf
+    dest=/root/.my.cnf
     mode=0600
