@@ -72,3 +72,12 @@
     src=backup.j2
     dest=/root/bin/backup.sh
     mode=0700
+
+- name: add cron entry
+  sudo: yes
+  cron:
+    name="backup to tarsnap"
+    user="root"
+    minute="15"
+    job="/root/bin/backup.sh > /dev/null 2>&1"
+    state=present
