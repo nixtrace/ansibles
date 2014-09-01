@@ -79,5 +79,5 @@
     name="backup to tarsnap"
     user="root"
     minute="15"
-    job="/root/bin/backup.sh > /dev/null 2>&1"
+    job="/root/bin/backup.sh >> /var/log/backup.log 2>&1"
     state=present
