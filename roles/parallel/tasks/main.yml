@@ -1,0 +1,7 @@
+---
+
+- name: install parallel
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - parallel
