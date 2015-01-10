@@ -2,7 +2,7 @@
 - name: setup cron job
   cron:
     name={{ app }}
-    minute="*/5"
-    job="SHELL=/bin/bash; HOME=/home/{{ ansible_ssh_user }}; PATH=/bin:/usr/bin:/usr/local/bin; cd /home/{{ ansible_ssh_user }}/www/{{ app }}/public; chruby-exec {{ ruby_version }} -- bundle exec ruby {{ exec }}"
+    minute={{ minute }}
+    job="cd /home/{{ ansible_ssh_user }}/www/{{ app }}/public/bin;  {{ exec }}"
     state=present
     user=admin
