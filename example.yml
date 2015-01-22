@@ -46,6 +46,10 @@
     - mysql
     # Install memcached.
     - memcached
+    # Install GNU parallel.
+    - parallel
+    # Setup tarsnap automatic backups.
+    - tarsnap
     # Create app necessary folders and a bare repo.
     - {
     role: git_bare,
