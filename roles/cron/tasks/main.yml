@@ -1,8 +1,0 @@
----
-- name: setup cron job
-  cron:
-    name={{ app }}
-    minute={{ minute }}
-    job="cd /home/{{ ansible_ssh_user }}/www/{{ app }}/public/bin;  {{ exec }}"
-    state=present
-    user=admin
