@@ -4,6 +4,7 @@
   apt: name={{ item }} state=latest
   with_items:
     - software-properties-common
+    - build-essential
 
 - name: add brightbox repo
   sudo: yes
@@ -20,14 +21,13 @@
   apt: name={{ item }} state=latest
   with_items:
     - ruby{{ version }}
-    # - ruby-switch
+    - ruby{{ version }}-dev
 
 - name: upload .gemrc
   template: src=gemrc.j2 dest=/home/{{ ansible_ssh_user }}/.gemrc
 
 - name: install base gems
-  sudo: yes
-  apt: name={{ item }} state=latest
+  gem: name={{ item }} state=latest
   with_items:
     - bundler
     - rake

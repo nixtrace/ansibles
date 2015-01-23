@@ -1,10 +1,4 @@
 ---
-- name: install foreman
-  sudo: yes
-  apt: name={{ item }} state=latest
-  with_items:
-    - foreman
-
 - name: disable service if exists
   sudo: yes
   service: name={{ app }} state=stopped enabled=no
@@ -12,7 +6,7 @@
 
 - name: bundle install
   shell:
-    bundle install --without development:test
+    bundle install --without development:test --path ~/.gems
     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
 
 - name: set Procfile
@@ -32,7 +26,7 @@
 - name: generate app initd daemon
   sudo: yes
   shell:
-    foreman export upstart /etc/init -a {{ app }} -u {{ ansible_ssh_user }}
+    bundle exec foreman export upstart /etc/init -a {{ app }} -u {{ ansible_ssh_user }}
     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
 
 - name: enable app service
