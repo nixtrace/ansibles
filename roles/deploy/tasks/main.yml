@@ -1,14 +1,9 @@
 ---
-- name: Install global foreman
+- name: install foreman
   sudo: yes
-  shell:
-    chruby-exec ruby-{{ ruby_version }} -- gem install foreman
-    creates=/opt/rubies/ruby-{{ ruby_version }}/bin/foreman
-
-- name: Install global foreman initd generator
-  sudo: yes
-  shell:
-    chruby-exec ruby-{{ ruby_version }} -- gem install foreman-export-initscript
+  apt: name={{ item }} state=latest
+  with_items:
+    - foreman
 
 - name: disable service if exists
   sudo: yes
@@ -17,7 +12,7 @@
 
 - name: bundle install
   shell:
-    chruby-exec ruby-{{ ruby_version }} -- bundle install --without development:test
+    bundle install --without development:test
     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
 
 - name: set Procfile
@@ -34,30 +29,11 @@
     dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/.env
     force=yes
 
-- name: set database env
-  lineinfile:
-    dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/.env
-    regexp="^DATABASE_URL"
-    line='DATABASE_URL="postgres{{ ':' }}//{{ ansible_ssh_user }}{{ ':' }}{{ db_password}}@localhost/{{ app }}"'
-    insertbefore=BOF
-    state=present
-
-- name: upgrade DB
-  shell:
-    chruby-exec ruby-{{ ruby_version }} -- bundle exec foreman run rake db:upgrade
-    chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
-
 - name: generate app initd daemon
   sudo: yes
   shell:
-    chruby-exec ruby-{{ ruby_version }} -- foreman export initscript /etc/init.d -a {{ app }} -u {{ ansible_ssh_user }}
+    foreman export upstart /etc/init -a {{ app }} -u {{ ansible_ssh_user }}
     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
-
-- name: set permissions for initd daemon
-  sudo: yes
-  file:
-    path=/etc/init.d/{{ app }}
-    mode=0755
 
 - name: enable app service
   sudo: yes
