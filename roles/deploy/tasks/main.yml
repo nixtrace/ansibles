@@ -9,14 +9,6 @@
     bundle install --without development:test --path ~/.gems
     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
 
-- name: set Procfile
-  lineinfile:
-    dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/Procfile
-    regexp="^web"
-    line="web{{':'}} bundle exec puma -e production -t 1:16 -w {{ processors.stdout }} -b unix{{':'}}///tmp/{{ app }}.sock"
-    backrefs=yes
-    state=present
-
 - name: upload env
   copy:
     src={{ local }}/.env
