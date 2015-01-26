@@ -1,0 +1,47 @@
+---
+
+- name: add redis repo
+  sudo: yes
+  apt_repository:
+    repo='ppa:chris-lea/redis-server'
+    state=present
+
+- name: update sources
+  sudo: yes
+  apt: update_cache=yes
+
+- name: install redis
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - redis-server
+
+- name: bind private ip
+  sudo: yes
+  when: private_ip is defined
+  lineinfile:
+    dest=/etc/redis/redis.conf
+    regexp="^#?bind"
+    line="bind {{ private_ip }}"
+    backrefs=yes
+    state=present
+
+- name: bind local socket
+  sudo: yes
+  lineinfile:
+    dest=/etc/redis/redis.conf
+    regexp="unixsocket"
+    line="unixsocket /tmp/redis.sock"
+    backrefs=yes
+    state=present
+
+- name: enable AOF
+  sudo: yes
+  lineinfile:
+    dest=/etc/redis/redis.conf
+    regexp="^#?appendonly"
+    line="appendonly yes"
+    backrefs=yes
+    state=present
+  notify:
+    - restart nginx
