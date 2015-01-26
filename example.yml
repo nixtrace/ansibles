@@ -87,8 +87,9 @@
     # Deploy a Ruby app on Puma and upload .env
     - {
     role: deploy,
-    app: appname,
-    local: '/httpdocs/appname'
+    app: app-name,
+    local: "~/httpdocs/app-name"
+    }
     }
     # Deploy a blank WordPress install.
     - {
