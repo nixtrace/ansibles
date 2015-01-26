@@ -30,8 +30,17 @@
   sudo: yes
   lineinfile:
     dest=/etc/redis/redis.conf
-    regexp="unixsocket"
+    regexp="unixsocket "
     line="unixsocket /tmp/redis.sock"
+    backrefs=yes
+    state=present
+
+- name: set socket permissions
+  sudo: yes
+  lineinfile:
+    dest=/etc/redis/redis.conf
+    regexp="unixsocketperm"
+    line="unixsocketperm 777"
     backrefs=yes
     state=present
 
@@ -43,5 +52,4 @@
     line="appendonly yes"
     backrefs=yes
     state=present
-  notify:
-    - restart nginx
+  notify: restart redis
