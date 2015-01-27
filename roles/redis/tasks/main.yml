@@ -53,3 +53,8 @@
     backrefs=yes
     state=present
   notify: restart redis
+
+- name: open firewall for private ip
+  sudo: yes
+  when: private_ip is defined
+  ufw: rule=allow port=6379 proto=tcp to_ip=192.168.175.62
