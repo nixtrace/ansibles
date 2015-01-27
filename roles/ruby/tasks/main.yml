@@ -26,8 +26,8 @@
 - name: upload .gemrc
   template: src=gemrc.j2 dest=/home/{{ ansible_ssh_user }}/.gemrc
 
-- name: install base gems
-  gem: name={{ item }} state=latest
-  with_items:
-    - bundler
-    - rake
+- name: install bundler
+  sudo: yes
+  shell:
+    gem install bundler
+    creates=/usr/local/bin/bundle
