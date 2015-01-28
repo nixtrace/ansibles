@@ -5,6 +5,7 @@
   with_items:
     - software-properties-common
     - build-essential
+    - libssl-dev
 
 - name: add brightbox repo
   sudo: yes
