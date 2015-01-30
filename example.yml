@@ -84,7 +84,7 @@
     app: appname,
     password: "{{ app1_db_password }}"
     }
-    # Deploy a Ruby app on Puma and upload .env
+    # Deploy a Ruby app
     - {
     role: deploy,
     app: app-name,
