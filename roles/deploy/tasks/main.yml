@@ -4,6 +4,12 @@
   service: name={{ app }} state=stopped enabled=no
   ignore_errors: yes
 
+- name: remove old upstart jobs
+  sudo: yes
+  shell:
+    rm {{ app }}*
+    chdir=/etc/init
+
 - name: bundle install
   shell:
     bundle install --without development:test --path ~/.gems
