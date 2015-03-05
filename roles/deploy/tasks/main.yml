@@ -9,6 +9,7 @@
   shell:
     rm {{ app }}*
     chdir=/etc/init
+  ignore_errors: yes
 
 - name: bundle install
   shell:
