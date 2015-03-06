@@ -16,11 +16,11 @@
     bundle install --without development:test --path ~/.gems
     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
 
-- name: upload env
-  copy:
-    src={{ local }}/.env
-    dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/.env
-    force=yes
+# - name: upload env
+#   copy:
+#     src={{ local }}/.env
+#     dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/.env
+#     force=yes
 
 - name: generate app initd daemon
   sudo: yes
