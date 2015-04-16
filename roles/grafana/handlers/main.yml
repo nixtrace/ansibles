@@ -1,0 +1,9 @@
+---
+
+- name: start
+  sudo: yes
+  service: name=grafana state=started
+
+- name: restart
+  sudo: yes
+  service: name=grafana state=restarted
