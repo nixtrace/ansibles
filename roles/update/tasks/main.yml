@@ -1,4 +1,8 @@
 ---
+- name: install aptitude
+  sudo: yes
+  apt: name=aptitude state=latest
+
 - name: update packages
   sudo: yes
   apt: update_cache=yes

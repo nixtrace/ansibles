@@ -90,7 +90,6 @@
     app: app-name,
     local: "~/httpdocs/app-name"
     }
-    }
     # Deploy a blank WordPress install.
     - {
     role: wordpress,
