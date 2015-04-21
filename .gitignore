@@ -5,3 +5,5 @@ hosts
 /*.yml
 !/example.yml
 tarsnap_keys
+/group_vars/*
+!/group_vars/example

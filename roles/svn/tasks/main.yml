@@ -1,0 +1,4 @@
+---
+- name: install svn
+  sudo: yes
+  apt: name=subversion state=latest
