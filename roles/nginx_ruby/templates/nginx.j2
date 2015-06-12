@@ -17,6 +17,8 @@ server {
   access_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/access.log;
   error_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/error.log;
 
+  client_max_body_size 5m;
+
   location / {
     try_files $uri @app;
   }
