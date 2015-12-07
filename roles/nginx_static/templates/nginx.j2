@@ -8,6 +8,11 @@ server {
   access_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/access.log;
   error_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/error.log;
 
+  location / {
+    # Serve html files without extension.
+    try_files $uri.html $uri/ =404;
+  }
+
   # Protect dot files and folders.
   location ~ /\. {
     access_log off;
