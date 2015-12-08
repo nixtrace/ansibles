@@ -21,3 +21,9 @@
   apt: name={{ item }} state=latest
   with_items:
     - goaccess
+
+- name: upload config file
+  sudo: yes
+  template:
+    src=goaccess.j2
+    dest=/etc/goaccess.conf
