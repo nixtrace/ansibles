@@ -1,3 +1,10 @@
+{% if no_www is defined %}
+server {
+  server_name *.{{ app_domain }};
+  return 301 $scheme://{{ app_domain }}$request_uri;
+}
+{% endif %}
+
 server {
 
   listen 80;
