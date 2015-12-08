@@ -1,0 +1,23 @@
+---
+
+- name: add goaccess repo
+  sudo: yes
+  apt_repository:
+    repo='deb http://deb.goaccess.io trusty main'
+    state=present
+
+- name: add goaccess key
+  sudo: yes
+  apt_key:
+    url=http://deb.goaccess.io/gnugpg.key
+    state=present
+
+- name: update sources
+  sudo: yes
+  apt: update_cache=yes
+
+- name: install goaccess
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - goaccess
