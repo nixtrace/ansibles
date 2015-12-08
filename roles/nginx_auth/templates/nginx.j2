@@ -1,0 +1,37 @@
+{% if no_www is defined %}
+server {
+  server_name *.{{ app_domain }};
+  return 301 $scheme://{{ app_domain }}$request_uri;
+}
+{% endif %}
+
+server {
+
+  listen 80;
+
+  server_name {{ app_domain }};
+  root /home/{{ ansible_ssh_user }}/www/{{ app }}/public;
+
+  access_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/access.log;
+  error_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/error.log;
+
+  location / {
+    # Serve html files without extension.
+    try_files $uri.html $uri/ =404;
+    auth_basic "Restricted Content";
+    auth_basic_user_file /home/{{ ansible_ssh_user }}/www/{{ app }}/.htpasswd;
+  }
+
+  location = /favicon.ico {
+    log_not_found off;
+    access_log off;
+  }
+
+  # Protect dot files and folders.
+  location ~ /\. {
+    access_log off;
+    log_not_found off;
+    deny all;
+  }
+
+}

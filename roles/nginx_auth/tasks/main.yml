@@ -1,0 +1,22 @@
+---
+
+- name: create htpasswd file
+  sudo: yes
+  template:
+    src=htpasswd.j2
+    dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/.htpasswd
+  notify: restart nginx
+
+- name: create static nginx host
+  sudo: yes
+  template:
+    src=nginx.j2
+    dest=/etc/nginx/sites-available/{{ app }}
+  notify: restart nginx
+
+- name: link nginx host
+  sudo: yes
+  file:
+    src=/etc/nginx/sites-available/{{ app }}
+    dest=/etc/nginx/sites-enabled/{{ app }} state=link
+  notify: restart nginx
