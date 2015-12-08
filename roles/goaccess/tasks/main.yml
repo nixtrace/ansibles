@@ -27,3 +27,15 @@
   template:
     src=goaccess.j2
     dest=/etc/goaccess.conf
+
+- name: download geoip db
+  get_url:
+    url="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz"
+    dest=/home/{{ ansible_ssh_user }}/GeoLiteCity.dat.gz
+
+- name: unpack
+  sudo: yes
+  command:
+    gunzip GeoLiteCity.dat.gz
+    chdir=/home/{{ ansible_ssh_user }}/
+    creates=/home/{{ ansible_ssh_user }}/GeoLiteCity.dat
