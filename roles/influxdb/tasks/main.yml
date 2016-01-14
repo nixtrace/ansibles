@@ -1,40 +1,44 @@
 ---
 
-- name: install ansible dependencies
+- name: remove i386 arch
   sudo: yes
-  apt: name={{ item }} state=latest
-  with_items:
-  - python-httplib2
+  command:
+    dpkg --remove-architecture i386
 
-- name: download
-  get_url:
-    url="http://s3.amazonaws.com/influxdb/influxdb_latest_amd64.deb"
-    dest=/home/{{ ansible_ssh_user }}/influxdb.deb
+- name: set repo key
+  sudo: yes
+  apt_key:
+    url: 'https://repos.influxdata.com/influxdb.key'
+    state: present
+
+- name: add repo
+  sudo: yes
+  apt_repository:
+    repo: 'deb https://repos.influxdata.com/ubuntu trusty stable'
+    state: present
 
 - name: update sources
   sudo: yes
   apt: update_cache=yes
 
-- name: install
+- name: install package
   sudo: yes
-  apt: deb="/home/{{ ansible_ssh_user }}/influxdb.deb"
+  apt: name={{ item }} state=latest
+  with_items:
+    - influxdb
+  notify: start influxdb
 
 - name: config
   sudo: yes
   template:
-    src=config.j2
-    dest=/opt/influxdb/shared/config.toml
+    src=influxdb.j2
+    dest=/etc/influxdb/influxdb.conf
   notify: restart influxdb
 
-- name: create metrics db
-  uri:
-    url="http://{{ private_ip }}:8086/db?u=root&p=root"
-    method=POST
-    body="{\"name\"{{':'}} \"metrics\"}"
-    HEADER_Content-Type="application/json"
-    status_code=201
-    dest=/home/{{ ansible_ssh_user }}/.influxdbcreated
-    creates=/home/{{ ansible_ssh_user }}/.influxdbcreated
+- name: create udp db
+  command:
+    influx --host {{ private_ip }} -execute 'CREATE DATABASE udp'
+    creates=/home/{{ ansible_ssh_user }}/.influxdb__db_created
 
 - name: open firewall for private ip udp
   sudo: yes
