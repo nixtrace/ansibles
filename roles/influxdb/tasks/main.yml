@@ -36,9 +36,9 @@
   notify: restart influxdb
 
 - name: create udp db
+  ignore_errors: yes
   command:
     influx --host {{ private_ip }} -execute 'CREATE DATABASE udp'
-    creates=/home/{{ ansible_ssh_user }}/.influxdb__db_created
 
 - name: open firewall for private ip udp
   sudo: yes

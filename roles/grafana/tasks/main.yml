@@ -1,25 +1,34 @@
 ---
 
-- name: download
-  get_url:
-    url="https://grafanarel.s3.amazonaws.com/builds/grafana_2.0.0-beta1_amd64.deb"
-    dest=/home/{{ ansible_ssh_user }}/grafana.deb
+- name: set repo key
+  sudo: yes
+  apt_key:
+    url: 'https://packagecloud.io/gpg.key'
+    state: present
+
+- name: add repo
+  sudo: yes
+  apt_repository:
+    repo: 'deb https://packagecloud.io/grafana/stable/debian/ wheezy main'
+    state: present
 
 - name: update sources
   sudo: yes
   apt: update_cache=yes
 
-- name: install
+- name: install package
   sudo: yes
-  apt: deb="/home/{{ ansible_ssh_user }}/grafana.deb"
-  notify: restart
+  apt: name={{ item }} state=latest
+  with_items:
+    - grafana
+  notify: start grafana
 
-- name: config
-  sudo: yes
-  template:
-    src=grafana.j2
-    dest=/etc/grafana/grafana.ini
-  notify: restart
+# - name: config
+#   sudo: yes
+#   template:
+#     src=grafana.j2
+#     dest=/etc/grafana/grafana.ini
+#   notify: restart grafana
 
 - name: open firewall
   sudo: yes

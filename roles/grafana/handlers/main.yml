@@ -1,9 +1,9 @@
 ---
 
-- name: start
+- name: start grafana
   sudo: yes
-  service: name=grafana state=started
+  service: name=grafana-server state=started
 
-- name: restart
+- name: restart grafana
   sudo: yes
-  service: name=grafana state=restarted
+  service: name=grafana-server state=restarted
