@@ -23,12 +23,12 @@
     - grafana
   notify: start grafana
 
-# - name: config
-#   sudo: yes
-#   template:
-#     src=grafana.j2
-#     dest=/etc/grafana/grafana.ini
-#   notify: restart grafana
+- name: config
+  sudo: yes
+  template:
+    src=grafana.j2
+    dest=/etc/grafana/grafana.ini
+  notify: restart grafana
 
 - name: open firewall
   sudo: yes
