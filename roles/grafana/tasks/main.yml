@@ -33,3 +33,8 @@
 - name: open firewall
   sudo: yes
   ufw: rule=allow port=3000 proto=tcp
+
+- name: run grafana at boot
+  sudo: yes
+  command:
+    update-rc.d grafana-server defaults 95 10
