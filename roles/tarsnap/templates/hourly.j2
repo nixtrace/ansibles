@@ -4,4 +4,4 @@ export PATH="/usr/local/bin:/usr/bin:/bin"
 
 `/root/bin/db_dump.sh`;
 
-tarsnap --list-archives -v | grep hourly | sort -k 2 -r | awk '{ if (NR > 4) { system("tarsnap -d -f " $1) } } END { system("tarsnap -c -f support-hourly-`date +%s` /home/admin/www /root/dbs /var/lib/redis /opt/influxdb/shared/data") }'
+tarsnap --list-archives -v | grep hourly | sort -k 2 -r | awk '{ if (NR > 4) { system("tarsnap -d -f " $1) } } END { system("tarsnap -c -f {{ hostname }}-hourly-`date +%s` /home/admin/www /root/dbs /var/lib/redis /opt/influxdb/shared/data") }'
