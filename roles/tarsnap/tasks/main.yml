@@ -12,7 +12,7 @@
 
 - name: download
   get_url:
-    url="https://www.tarsnap.com/download/tarsnap-autoconf-1.0.35.tgz"
+    url="https://www.tarsnap.com/download/tarsnap-autoconf-1.0.36.1.tgz"
     dest=/home/{{ ansible_ssh_user }}/tarsnap.tgz
 
 - name: unpack
@@ -20,20 +20,20 @@
     src=/home/{{ ansible_ssh_user }}/tarsnap.tgz
     dest=/home/{{ ansible_ssh_user }}/
     copy=no
-    creates=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/configure
+    creates=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.36.1/configure
 
 - name: configure
   sudo: yes
   command:
     ./configure
-    chdir=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/
-    creates=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/config.h
+    chdir=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.36.1/
+    creates=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.36.1/config.h
 
 - name: make
   sudo: yes
   command:
     make all install clean
-    chdir=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.35/
+    chdir=/home/{{ ansible_ssh_user }}/tarsnap-autoconf-1.0.36.1/
     creates=/usr/local/bin/tarsnap
 
 - name: copy key
@@ -49,35 +49,45 @@
     src=tarsnaprc.j2
     dest=/root/.tarsnaprc
 
-- name: copy folders file
-  sudo: yes
-  template:
-    src=tarsnap_folders.j2
-    dest=/root/.tarsnap_folders
-
 - name: create bin folder
   sudo: yes
   file: path=/root/bin state=directory
 
-- name: copy tarsnap backups generator
+- name: copy db dump script
   sudo: yes
   template:
-    src=tarsnap-generations.j2
-    dest=/root/bin/tarsnap-generations.sh
+    src=db_dump.j2
+    dest=/root/bin/db_dump.sh
     mode=0700
 
-- name: copy backup
+- name: copy tarsnap hourly script
   sudo: yes
   template:
-    src=backup.j2
-    dest=/root/bin/backup.sh
+    src=hourly.j2
+    dest=/root/bin/hourly.sh
     mode=0700
 
-- name: add cron entry
+- name: copy tarsnap weekly script
+  sudo: yes
+  template:
+    src=weekly.j2
+    dest=/root/bin/weekly.sh
+    mode=0700
+
+- name: add hourly cron
   sudo: yes
   cron:
-    name="backup to tarsnap"
+    name="tarsnap hourly backup"
     user="root"
-    minute="15"
-    job="/root/bin/backup.sh >> /var/log/backup.log 2>&1"
+    minute="1"
+    job="/root/bin/hourly.sh >> /var/log/backup.log 2>&1"
+    state=present
+
+- name: add weekly cron
+  sudo: yes
+  cron:
+    name="tarsnap weekly backup"
+    user="root"
+    weekday="1"
+    job="/root/bin/weekly.sh >> /var/log/backup.log 2>&1"
     state=present

@@ -6,15 +6,13 @@ dir="/root/dbs"
 mkdir -p $dir;
 
 if hash pg_dump 2>/dev/null; then
-  databases=$(sudo -u {{ ansible_ssh_user }} psql -l | grep {{ ansible_ssh_user }} | awk {'print $1'})
+  databases=$(sudo -u admin psql -l | grep admin | awk {'print $1'})
 
   for database in $databases; do
-    sudo -u {{ ansible_ssh_user }} pg_dump $database -Fc > $dir/$database.sql
+    sudo -u admin pg_dump $database -Fc > $dir/$database.sql
   done
 fi
 
 if hash mysqldump 2>/dev/null; then
   mysqldump -u root --all-databases > $dir/mysql.sql;
 fi
-
-$HOME/bin/tarsnap-generations.sh -f $HOME/.tarsnap_folders -h 6 -d 6 -w 6 -m 6
