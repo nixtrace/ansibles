@@ -1,0 +1,9 @@
+---
+
+- name: install
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - mongodb
+  notify:
+    - restart exim
