@@ -1,0 +1,28 @@
+---
+
+- name: create bin directory
+  file:
+    path=/home/{{ ansible_ssh_user }}/bin
+    state=directory
+
+- name: download
+  get_url:
+    url="https://github.com/mailhog/MailHog/releases/download/v0.1.8/MailHog_linux_amd64"
+    dest=/home/{{ ansible_ssh_user }}/bin/mailhog
+
+- name: make executable
+  file:
+    path=/home/{{ ansible_ssh_user }}/bin/mailhog
+    mode="u+x"
+
+- name: open firewall
+  sudo: yes
+  ufw: rule=allow port=8026 proto=tcp
+
+- name: config upstart
+  sudo: yes
+  template:
+    src=mailhog.j2
+    dest=/etc/init/mailhog.conf
+  notify:
+    - restart

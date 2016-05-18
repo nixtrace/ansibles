@@ -1,5 +1,7 @@
 .DS_Store
 hosts
+hosts.backup
+playbooks
 /host_vars/*
 !/host_vars/example
 /*.yml
@@ -7,3 +9,4 @@ hosts
 tarsnap_keys
 /group_vars/*
 !/group_vars/example
+*.retry
