@@ -22,10 +22,6 @@
   sudo: yes
   ufw: rule=allow port=22 proto=tcp
 
-- name: open http
-  sudo: yes
-  ufw: rule=allow port=80 proto=tcp
-
 - name: enable firewall
   sudo: yes
   ufw: state=enabled

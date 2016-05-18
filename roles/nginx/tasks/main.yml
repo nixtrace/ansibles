@@ -1,5 +1,9 @@
 ---
 
+- name: open http
+  sudo: yes
+  ufw: rule=allow port=80 proto=tcp
+
 - name: install nginx
   sudo: yes
   apt: name={{ item }} state=latest

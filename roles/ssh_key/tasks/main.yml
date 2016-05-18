@@ -1,0 +1,6 @@
+---
+- name: upload ssh pub key
+  sudo: yes
+  authorized_key:
+    user={{ ansible_ssh_user }}
+    key=https://github.com/{{ github_user }}.keys
