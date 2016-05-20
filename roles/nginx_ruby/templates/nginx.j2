@@ -11,7 +11,7 @@ server {
 
   {% if load_balancer is defined %}
   real_ip_header X-Forwarded-For;
-  set_real_ip_from 192.168.255.0/24;
+  set_real_ip_from {{ load_balancer }};
   {% endif %}
 
   access_log /home/{{ ansible_ssh_user }}/www/{{ app }}/logs/access.log;

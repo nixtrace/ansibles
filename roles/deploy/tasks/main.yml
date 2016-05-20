@@ -4,30 +4,25 @@
   service: name={{ app }} state=stopped enabled=no
   ignore_errors: yes
 
-- name: remove old upstart jobs
-  sudo: yes
-  shell:
-    rm {{ app }}*
-    chdir=/etc/init
-  ignore_errors: yes
-
 - name: bundle install
   shell:
-    bundle install --without development:test --path ~/.gems
+    bundle install --without development test --path ~/.gems
     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
 
-# - name: upload env
-#   copy:
-#     src={{ local }}/.env
-#     dest=/home/{{ ansible_ssh_user }}/www/{{ app }}/public/.env
-#     force=yes
-
-- name: generate app initd daemon
+- name: config upstart
   sudo: yes
-  shell:
-    bundle exec foreman export upstart /etc/init -a {{ app }} -u {{ ansible_ssh_user }}
-    chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
+  template:
+    src=upstart.j2
+    dest=/etc/init/{{ app }}.conf
+  notify:
+    - restart
 
 - name: enable app service
   sudo: yes
   service: name={{ app }} state=started enabled=yes
+
+# - name: generate app initd daemon
+#   sudo: yes
+#   shell:
+#     bundle exec foreman export upstart /etc/init -a {{ app }} -u {{ ansible_ssh_user }}
+#     chdir=/home/{{ ansible_ssh_user }}/www/{{ app }}/public
